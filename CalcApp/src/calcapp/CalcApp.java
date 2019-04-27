@@ -38,17 +38,27 @@ class myJButton extends JFrame implements ActionListener{
     JButton tanButt = new JButton("tan()");
     
     JButton logButt = new JButton("log");
+    JButton invButt = new JButton("Inv");
+    JButton powButt = new JButton("pow");
+    JButton factButt = new JButton("Fact");
+    JButton modButt = new JButton("Mod");
+    
+    JButton plusMinusButt = new JButton("-x");
     
     JButton percentButt= new JButton("%");
     JButton dotButt= new JButton(".");
     JButton equalButt= new JButton("=");
+    
     JButton addButt = new JButton("+");
     JButton subButt = new JButton("-");
     JButton mulButt = new JButton("*");
     JButton divButt = new JButton("/");
+    
     JButton clearButt = new JButton("AC");
     JButton screenClear=new JButton("C");
     JButton delButt = new JButton("del");
+    
+    
     JLabel screen = new JLabel("");
     JLabel prevNum=new JLabel("");
     JLabel operatorScreen=new JLabel("");
@@ -109,6 +119,26 @@ class myJButton extends JFrame implements ActionListener{
         logButt.setBackground(Color.darkGray);
         logButt.setForeground(Color.white);
         
+        invButt.setBounds(410, 150, 65, 30);
+        invButt.setBackground(Color.darkGray);
+        invButt.setForeground(Color.orange);
+        
+        powButt.setBounds(410,200,65,30);
+        powButt.setBackground(Color.darkGray);
+        powButt.setForeground(Color.white);
+        
+        factButt.setBounds(410,250,65,30);
+        factButt.setBackground(Color.darkGray);
+        factButt.setForeground(Color.white);
+        
+        modButt.setBounds(410,300, 65,30);
+        modButt.setBackground(Color.darkGray);
+        modButt.setForeground(Color.white);
+        
+        plusMinusButt.setBounds(485,100,50,30);
+        plusMinusButt.setBackground(Color.darkGray);
+        plusMinusButt.setForeground(Color.white);
+        
         screenClear.setBounds(340,250,65,30);
         screenClear.setBackground(Color.darkGray);
         screenClear.setForeground(Color.white);
@@ -166,7 +196,13 @@ class myJButton extends JFrame implements ActionListener{
         percentButt.addActionListener(this);
         
         logButt.addActionListener(this);
+        invButt.addActionListener(this);
+        powButt.addActionListener(this);
+        factButt.addActionListener(this);
+        modButt.addActionListener(this);
         
+        plusMinusButt.addActionListener(this);
+                
         sineButt.addActionListener(this);
         cosButt.addActionListener(this);
         tanButt.addActionListener(this);
@@ -187,8 +223,12 @@ class myJButton extends JFrame implements ActionListener{
         C1.add(cosButt);
         C1.add(tanButt);
         C1.add(delButt);
+        C1.add(invButt);
         
         C1.add(logButt);
+        C1.add(powButt);
+        C1.add(factButt);
+        C1.add(modButt);
         
         C1.add(screenClear);
         C1.add(clearButt);
@@ -200,13 +240,30 @@ class myJButton extends JFrame implements ActionListener{
         C1.add(dotButt);
         C1.add(percentButt);
         
+        C1.add(plusMinusButt);
+        
         C1.add(operatorScreen);
         C1.add(prevNum);
         C1.add(screen);
 
 
     }
-
+    
+        int inv_flag=0;
+        public void changeTrigono(){
+            if(inv_flag==0){
+                sineButt.setText("asin");
+                cosButt.setText("acos");
+                tanButt.setText("atan");
+                inv_flag=1;
+            }else{
+                sineButt.setText("sin()");
+                cosButt.setText("cos()");
+                tanButt.setText("tan()");
+                inv_flag=0;
+            }
+        }
+    
         public void showInScreen(JButton jButt){
             String result=screen.getText();
             if(jButt.getText().equals(".")){
@@ -280,6 +337,30 @@ class myJButton extends JFrame implements ActionListener{
             refresh=true;
         }
         
+        public void getFactorial(){
+            int num1=Integer.parseInt(screen.getText());
+            int fact=1;
+            for(int i=2;i<=num1;i++){
+                fact=fact*i;
+            }
+            screen.setText(Integer.toString(fact));
+        }
+        
+        public void changeSign(){
+            if(screen.getText().equals("")){
+                return;
+            }
+            double num1=Double.parseDouble(screen.getText());
+            if(num1>0){
+                num1=-num1;
+                plusMinusButt.setText("+x");
+            }else{
+                num1=abs(num1);
+                plusMinusButt.setText("-x");
+            }
+            screen.setText(Double.toString(num1));
+        }
+        
         public void handleDelete(){
             String result=screen.getText();
             int len=result.length();
@@ -293,16 +374,27 @@ class myJButton extends JFrame implements ActionListener{
             double result=Double.parseDouble(screen.getText());
             String op=operatorScreen.getText();
             String butt_text=jButt.getText();
-                if(butt_text.equals("sin()")){
-                  output=sin(result);
-                }else if(butt_text.equals("cos()")){
-                  output=cos(result);
-                }else if(butt_text.equals("tan()")){
-                  output=tan(result);
-                }else if(butt_text.equals("log")){
-                  output=log(output);  
-                }
-                screen.setText(Double.toString(output));
+            switch(butt_text){
+                case "sin()":
+                    output=sin(result);
+                    break;
+                case "cos()":
+                    output=cos(result);
+                    break;
+                case "tan()":
+                    output=tan(result);
+                    break;
+                case "asin":
+                    output=asin(result);
+                    break;
+                case "acos":
+                    output=acos(result);
+                    break;
+                case "atan":
+                    output=atan(result);
+                    break;
+            }
+            screen.setText(Double.toString(output));
             }
             catch(Exception e){
               return;  
@@ -319,6 +411,9 @@ class myJButton extends JFrame implements ActionListener{
                 return;
             }
             String op=jButt.getText();
+            if(op.equals("pow")){
+                op="^";
+            }
             String prevOp=operatorScreen.getText();
             int res=0;
             String result=screen.getText(); 
@@ -366,6 +461,16 @@ class myJButton extends JFrame implements ActionListener{
                     break;
                 case "%":
                     result=Double.toString((Double.parseDouble(num1)*Double.parseDouble(num2))/100);
+                    break;
+                case "^":
+                    result=Double.toString(pow(Double.parseDouble(num1),Double.parseDouble(num2)));
+                    break;
+                case "Mod":
+                    try{
+                        result=Integer.toString(Integer.parseInt(num1)%Integer.parseInt(num2));
+                    }catch(Exception e){
+                        result=Double.toString(Double.parseDouble(num1)%Double.parseDouble(num2));
+                    }
                     break;
             }
                 screen.setText(result);
@@ -438,10 +543,22 @@ class myJButton extends JFrame implements ActionListener{
                 if(e.getSource()==logButt){
                     handleTrigono(logButt);
                 }
+                if(e.getSource()==invButt){
+                    changeTrigono();
+                }
                 if(e.getSource()==tanButt){
                     handleTrigono(tanButt);
                 }if(e.getSource()==delButt){
                     handleDelete();
+                }if(e.getSource()==powButt){
+                    handleButton(powButt);
+                }if(e.getSource()==modButt){
+                    handleButton(modButt);
+                }
+                if(e.getSource()==factButt){
+                    getFactorial();
+                }if(e.getSource()==plusMinusButt){
+                    changeSign();
                 }
             }            
    
